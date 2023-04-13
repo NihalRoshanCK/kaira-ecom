@@ -14,20 +14,21 @@ from django.conf import settings
 import kaira.settings
 from datetime import datetime
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import user_passes_test
 
 
 # Create your views here.
-
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def adminlogin(request):
     if request.user.is_superuser:
-        return redirect('admin_dash')
+        return redirect('admindashboard')
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_staff:
             login(request, user)
-            return redirect('admin_dash')
+            return redirect('admindashboard')
         else:
             messages.error(request, "Username or password mismatch")
     return render(request, 'adminpanel/admin_login.html')
@@ -42,6 +43,7 @@ def adminlogout(request):
             request.session.flush()
     return redirect(adminlogin)
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def add_Category(request):
     if request.method == "POST":
         name = request.POST['name']
@@ -56,11 +58,12 @@ def add_Category(request):
     return render (request,'adminpanel/addcategory.html',locals())
 
 
-
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def view_Category(request):
     category = Category.objects.all()
     return render (request,'adminpanel/viewcategory.html',locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def editcategory(request, pid):
     category = Category.objects.get(id=pid)
     if request.method == 'POST':
@@ -74,6 +77,7 @@ def editcategory(request, pid):
             return redirect(view_Category)
     return render(request, 'adminpanel/editcategory.html', locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def deletecategory(request, pid):
     category = Category.objects.get(id=pid)
     category.delete()
@@ -81,7 +85,7 @@ def deletecategory(request, pid):
     return redirect(view_Category)
 
 
-
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def add_Subcategory(request):
     category = Category.objects.all()
     if request.method == "POST":
@@ -96,14 +100,17 @@ def add_Subcategory(request):
             return redirect(view_Subcategory)
     return render (request,'adminpanel/addsubcategory.html',locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def view_Subcategory(request):
     sub_category = SubCategory.objects.all()
     return render (request,'adminpanel/viewsubcategory.html',locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def view_Brand(request):
     brand = Brand.objects.all()
     return render (request,'adminpanel/viewbrands.html',locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def add_Brand(request):
     if request.method == "POST":
         name = request.POST['name']
@@ -121,7 +128,7 @@ def add_Brand(request):
 #     color = Color.objects.all()
 #     return render (request,'adminpanel/viewcolor.html',locals())
 
-
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def add_Product(request):
     brand=Brand.objects.all()
     sub_category = SubCategory.objects.all()
@@ -142,6 +149,7 @@ def add_Product(request):
         return redirect(view_Product)
     return render (request,'adminpanel/addproduct.html',locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def view_varient(request):
     varient=ProductVarient.objects.all().order_by('id')
     image=ProductImage.objects.all()
@@ -150,6 +158,8 @@ def view_varient(request):
         'image':image,
     }
     return render (request,"adminpanel/viewvarient.html",context)
+
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def view_Product(request):
     product = Product.objects.all().order_by('id')
     
@@ -158,6 +168,7 @@ def view_Product(request):
     }
     return render (request,'adminpanel/viewproduct.html',context)
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def add_varients(request):
     color= ['White','Black','Green','Red','Yellow','Blue','Brown','Orange']
     product=Product.objects.all()
@@ -180,7 +191,7 @@ def add_varients(request):
         Size.objects.create(varient=varient,size=size,stock=stock)
     return render (request,'adminpanel/addproductvarient.html',locals())   
         
-
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def edit_Subcategory(request,pid):
     subcategory=SubCategory.objects.get(id=pid)
     category=Category.objects.all()
@@ -197,6 +208,7 @@ def edit_Subcategory(request,pid):
             return redirect('view_Subcategory')
     return render (request,'adminpanel/editsubcategory.html',locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def edit_brand(request,pid):
     brand=Brand.objects.get(id=pid)
     if request.method=="POST":
@@ -210,6 +222,7 @@ def edit_brand(request,pid):
             return redirect('view_Brand')
     return render (request,'adminpanel/editbrand.html',locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def edit_product(request,pid):
     product=Product.objects.get(id=pid)
     category=Category.objects.all()
@@ -234,7 +247,7 @@ def edit_product(request,pid):
             return redirect('view_Brand')
     return render(request,"adminpanel/editproduct.html",locals())
 
-
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def edit_varient(request,pid):
     varient=ProductVarient.objects.get(id=pid)
     product=Product.objects.all()
@@ -291,6 +304,7 @@ def edit_varient(request,pid):
         
     return render(request,"adminpanel/editvarient.html",locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def delete_category(request,pid):
     try:
         Category.objects.get(id=pid).delete()
@@ -299,6 +313,7 @@ def delete_category(request,pid):
         messages.warning(request,'some thing wrong happend')
     return redirect('view_Category')
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def delete_subcategory(request,pid):
     try:    
         SubCategory.objects.get(id=pid).delete()
@@ -306,6 +321,8 @@ def delete_subcategory(request,pid):
     except:
         messages.warning(request,'some thing wrong happend')
         return redirect(view_Subcategory)
+    
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def delete_brand(request,pid):
     try:
         Brand.objects.get(id=pid).delete()
@@ -314,6 +331,7 @@ def delete_brand(request,pid):
         messages.warning(request,'some thing wrong happend')
     return redirect('view_Brand')
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def delete_product(request,pid):
     try:
         Product.objects.get(id=pid).delete()
@@ -322,6 +340,7 @@ def delete_product(request,pid):
         messages.warning(request,'some thing wrong happend')
     return redirect('view_Product')
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def delete_varient(request,pid):
     try:
         ProductVarient.objects.get(id=pid).delete()
@@ -330,10 +349,12 @@ def delete_varient(request,pid):
         messages.warning(request,'some thing wrong happend')
     return redirect('view_varient')
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def view_coupon(request):
     coupon=Coupon.objects.all()
     return render(request,"adminpanel/viewcoupon.html",locals())
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def add_coupons(request):
     coupon_form = CouponForm(instance=request.user)
     if request.method == 'POST':
@@ -345,6 +366,7 @@ def add_coupons(request):
         form = CouponForm()
     return render(request, 'adminpanel/addcoupon.html', {'coupon_form': coupon_form})
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 def edit_coupon(request, pid):
     coupon = Coupon.objects.get(id=pid)
     coupon_form = CouponForm(instance=request.user)
@@ -360,6 +382,8 @@ def edit_coupon(request, pid):
 
     return render(request, 'adminpanel/editcoupon.html', {'coupon_form': coupon_form, 'coupon': coupon})
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
+
 def delete_coupon(request, pid):
     try:
         Coupon.objects.get(id=pid).delete()
@@ -369,9 +393,13 @@ def delete_coupon(request, pid):
         
     return redirect('view_coupon')
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
+
 def manage_user(request):
     user = User.objects.all().order_by('id')[1:]
     return render(request, 'adminpanel/manageuser.html', {'user': user })
+
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 
 def block_user(request, id):
     user = get_object_or_404(User, id=id)
@@ -384,6 +412,7 @@ def block_user(request, id):
     user.save()
     return redirect('manage_user')
 
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 
 def manage_order(request):
     orders=Order.objects.all().order_by('-id')
@@ -392,6 +421,9 @@ def manage_order(request):
     page_obj = paginator.get_page(page_number) 
     # return render(request, 'manageorder.html', locals())
     return render(request, 'adminpanel/manageorder.html', locals())
+
+
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 
 def update_order(request, id):
     if request.method == 'POST':
@@ -410,6 +442,8 @@ def update_order(request, id):
             except:
                 pass
     return redirect('manage_order')
+
+@user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
 
 def admincancelOrder(request, id):
     
@@ -504,6 +538,7 @@ def admincancelOrder(request, id):
     return redirect(manage_order)
 
 @user_passes_test(lambda u:u.is_superuser,login_url='adminlogin')
+
 def admindashboard(request):
     if request.user.is_authenticated:
         today_sales = Payment.objects.filter(created_at=datetime.today(), paid=True).aggregate(Sum('amount_paid'))['amount_paid__sum']

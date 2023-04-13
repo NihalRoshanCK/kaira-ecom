@@ -83,7 +83,7 @@ def viewcart(request):
 
 def remove_cart(request, product_id ,size):
     if request.user.is_authenticated:
-        cart_item = CartItem.objects.get(product_id=product_id, size    =size, user=request.user, is_active=True)  
+        cart_item = CartItem.objects.get(product_id=product_id, size=size, user=request.user, is_active=True)  
         cart_item.delete()
         messages.success(request, f"{cart_item.product.name} removed from cart!")
         return redirect(viewcart)
