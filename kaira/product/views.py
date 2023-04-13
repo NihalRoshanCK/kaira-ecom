@@ -155,29 +155,27 @@ def add_to_wishlist(request,product_id ,w):
         product = ProductVarient.objects.get(id=product_id)
         if wishlist.objects.filter(product=product,user_id=request.user.id).exists():
             messages.info(request, "Product already exist in wishlist")
-            return redirect('shop')
-            
+                        
         else:
             wishlist.objects.create(product=product,user_id=request.user.id)
             messages.success(request,"Product added to wishlist")
-            return redirect('shop')
         
+        if w == 1:
+            return redirect('singleproduct',product_id)
+        else:
+            return redirect('shop')
     else:
-        match w:
-            case 1:
-                return redirect('singleproduct','product_id')
-            case _:
-                return redirect('shop')
+        
         messages.warning(request, "Please log in to add items to wishlist.")
         return render (request,'user/login.html')
 
 def remove_from_wishlist(request,product_id,w):
-    wishItem=wishlist.objects.get(product_id=product_id,user_id=request.user.id)
+    wishItem=wishlist.objects.get(product_id=product_id,user=request.user)
     wishItem.delete()
     if w == 0:
         return redirect(viewwishlist)
     elif w == 1:
-        return redirect('singleproduct','product_id')
+        return redirect('singleproduct', product_id)
     else:
         return redirect('shop')
     
