@@ -1,0 +1,25 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+
+<div class="card shadow m-4">
+    <div class="card-body bg-secondary">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Update Brand</h5>
+        <div class="container-fluid">
+            <form method="POST" action="" >
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Brand name</label>
+                            <input type="text" name="name" class="form-control my-3" value="{{brand.name}}" placeholder="Category Name">
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="Submit" class="m-2 px-3 btn btn-primary">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

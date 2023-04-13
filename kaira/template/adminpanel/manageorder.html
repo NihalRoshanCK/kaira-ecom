@@ -1,0 +1,203 @@
+{% extends 'adminpanel/base.html' %}
+{% block link %}
+{% comment %}  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> {% endcomment %}
+{% endblock link %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class= "container text-center">
+<div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Order Manage</h5>
+        <div class="container-fluid">
+{% if orders %}
+         <table class="table table table-responsive">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">name</th>
+                <th scope="col">email</th>
+                <th scope="col">phone</th>
+                <th scope="col">amount</th>
+                <th scope="col">payment mode</th>
+                <th scope="col">tracking id</th>
+                <th scope="col">status</th>
+                <th scope="col">action</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="myTable" >
+
+                {% for i in page_obj %}
+
+            <tr>
+                <th scope="row">{{i.id}}</th>
+                <td>{{i.address.firstname}}</td>
+                <td>{{i.address.email}}</td>
+                <td>{{i.address.phone}}</td>
+                <td>₹{{i.order_total}}</td>
+                <td>{{i.payment.payment_method}}</td>
+                {% comment %} {% url 'orderdetails' i.id %} {% endcomment %}
+                <td><a href="" title="View Order Details">{{i.order_number}}</a></td>
+                <td>{{i.status}}</td>
+                <td>
+                    {% if i.status == 'Delivered' %}
+                    <label class="badge badge-success" style="color: green" >Delivered</label>
+                    {% elif i.status == 'Cancelled' %}
+                    <label class="badge badge-danger" style="color: red" >Cancelled</label>
+                    {% elif i.status == 'Returned' %}
+                    <label class="badge badge-warning">Returned</label>
+                    {%else%}
+                    <label class="badge badge-info p-2" type="button"  data-bs-toggle="modal" data-bs-target="#myModal{{i.id}}" id="Modal_button" style="  border: 1px solid orange;" >Change</label>
+                    {% comment %}  {% endcomment %}
+                    <a href="{% url 'admincancelOrder' i.id %}" class=" btn  " style=" color: red; " 
+                        onclick="return confirm('Are You Sure ?')"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+                    {%endif%}
+                </td>
+                  <td>
+                  {% if i.status == 'Order Confirmed' %}
+
+                  <!-- <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cancel{{i.id}}">
+                    Cancel
+                  </button> -->
+                  {% elif i.is_returned %}
+                    <b>Reason : </b><p>{{i.return_reason}}</p>
+                  {% endif %}
+                </td>
+              </tr>
+
+
+
+                {% comment %} <td><a href="" class="btn btn-danger btn-sm">Delete</a> {% endcomment %}
+                <!-- Status Modal -->
+<div class="modal fade" id="myModal{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Change Status</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'update_order' i.id %}" method="POST">
+          {% csrf_token %}
+
+          {% if i.status == 'Order Confirmed' %}
+
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Order Confirmed" disabled checked>
+            <label for="dreamweaver" class="ml-2 mt-2">Order Confirmed</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Shipped">
+            <label for="dreamweaver" class="ml-2 mt-2 text-info">Shipped</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Out for delivery" disabled>
+            <label for="dreamweaver" class="ml-2 mt-2 text-warning">Out for delivery</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Delivered" disabled>
+            <label for="dreamweaver" class="ml-2 mt-2 text-success">Delivered</label>
+          </div>
+
+          {% elif i.status == 'Shipped' %}
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Order Confirmed" disabled>
+            <label for="dreamweaver" class="ml-2 mt-2">Order Confirmed</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Shipped" disabled checked>
+            <label for="dreamweaver" class="ml-2 mt-2 text-info">Shipped</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Out for delivery">
+            <label for="dreamweaver" class="ml-2 mt-2 text-warning">Out for delivery</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Delivered" disabled>
+            <label for="dreamweaver" class="ml-2 mt-2 text-success">Delivered</label>
+          </div>
+
+          {% else %}
+
+<div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Order Confirmed" disabled>
+            <label for="dreamweaver" class="ml-2 mt-2">Order Confirmed</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Shipped" disabled>
+            <label for="dreamweaver" class="ml-2 mt-2 text-info">Shipped</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Out for delivery"  disabled checked>
+            <label for="dreamweaver" class="ml-2 mt-2 text-warning">Out for delivery</label>
+          </div>
+          <div class="row mb-2">
+            <input class="ml-3" type="radio" name="status" value="Delivered">
+            <label for="dreamweaver" class="ml-2 mt-2 text-success">Delivered</label>
+          </div>
+
+          {% endif %}
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+
+
+
+          {% else %}
+          <h4 class= "text-center">No records</h4>
+          {% endif %}
+                <!-- Start pagination -->
+
+                <div class="col-lg-12 ">
+                <div class="pagination justify-content-center">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                        <i class="ti-angle-left">PREVIOUS</i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for page in page_obj.paginator.page_range %}
+                                {% if page_obj.number == page %}
+                                    <li class="page-item active"><a class="page-link" href="#">{{ page }}</a></li>
+                                {% elif page > page_obj.number|add:'-3' and page < page_obj.number|add:'3' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                        <i class="ti-angle-right">NEXT</i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                </div>
+
+          <!-- End pagination -->
+          </div>
+{% endblock %}

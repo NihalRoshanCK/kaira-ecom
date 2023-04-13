@@ -1,0 +1,86 @@
+{% extends 'user/base.html' %}
+{% load my_tags %}
+{{% block title %}
+{{product.name}}
+{% endblock %}}
+
+
+{% block condent %}
+
+    <!-- ##### Single Product Details Area Start ##### -->
+    <section class="single_product_details_area d-flex align-items-center">
+
+        <!-- Single Product Thumb -->
+        <div class="single_product_thumb clearfix">
+            
+            <div class="product_thumbnail_slides owl-carousel">
+                 {% for i in images %}
+                <div class="container-fluid ">
+                    <img style="    " src="{{ i.images.url }}" alt="">
+                </div>
+                
+                {% endfor %} 
+                
+            </div>
+        </div>
+
+        <!-- Single Product Description -->
+        <div class="single_product_desc clearfix">
+            <span>{{product.brand}}</span>
+            <a href="cart.html">
+                <h2>{{product.name}}</h2>
+            </a>
+            {% if prod.offer == 0 %}
+            <p class="product-price"> ₹ {{prod.price}}</p>
+            {% else %}
+            <p class="product-price"><span class="old-price">₹ {{prod.price}}</span> ₹ {{offer}}</p>
+            {% endif %}
+            <p class="product-desc">{{product.description}}</p>
+
+            <!-- Form -->
+            <form class="cart-form clearfix" action="{% url 'addcart' prod.id %}" method="GET">
+                <!-- Select Box -->
+                <div class="select-box d-flex mt-50 mb-30">
+                    {% comment %} <select name="select" id="productSize" class="mr-5"> {% endcomment %}
+                        {% for s in size %}
+                        {% comment %} <option name="size" value="{{s.size}}">Size:{{s.size}}</option> {% endcomment %}
+                        <input type="radio" name="size" id="" value="{{s.size}}" />
+                        <label for=""> {{s.size}}</label>
+                        {% endfor %}
+                        {% comment %} <option value="value">Size: X</option>
+                        <option value="value">Size: M</option>
+                        <option value="value">Size: S</option> {% endcomment %}
+                    {% comment %} </select> {% endcomment %}
+                    <select name="select" id="productColor">
+                        {% for c in color %}
+                        <option name="color" value="{{c.color}}">Color: {{c.color}}</option>
+                        {% endfor %}
+                        {% comment %} <option value="value">Color: White</option>
+                        <option value="value">Color: Red</option>
+                        <option value="value">Color: Purple</option> {% endcomment %}
+                    </select>
+                </div>
+                <!-- Cart & Favourite Box -->
+                <div class="cart-fav-box d-flex align-items-center">
+                    <!-- Cart -->
+                    <button type="submit" name="addtocart" value="5" class="btn essence-btn">Add to cart</button>
+                    <!-- Favourite -->
+                    <div class="product-favourite ml-4">
+                        {% if whish == True %}
+                        <a href="{% url 'remove_from_wishlist' prod.id 1 %}" class="favme fa fa-heart active"></a>
+                        {% else %}
+                        <a href="{% url 'add_to_wishlist' prod.id 1 %}" class="favme fa fa-heart"></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    {% comment %} {% for i in images %}
+    <div class="container-fluid ">
+        <img style="max-width: 790px;min-width: 775px;  min-height:900px; max-height:900px;" src="{{i.hover_images.url}}" alt="">
+    </div>
+    {% endfor %} {% endcomment %}
+    <!-- ##### Single Product Details Area End ##### -->
+{% endblock %}

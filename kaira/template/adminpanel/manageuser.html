@@ -1,0 +1,52 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+
+<div class="card shadow w-100 bg-secondary">
+    <div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">All Registered Users</h5>
+        <div class="container-fluid">
+            <div class="table-responsive mt-5">
+            <table class="table table-bordered table-sm" id="example">
+                <thead>
+                <tr>
+                    <th>S.No.</th>
+                    block_user{% comment %} <th>Image</th> {% endcomment %}
+                    <th>User Name</th>
+                    {% comment %} <th>Last Name</th> {% endcomment %}
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                {% for i in user %}
+                {% if not i.is_superuser %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    {% comment %} <td><img src="{{i.image.url}}" style="width:80px;height:80px"/></td> {% endcomment %}
+                    <td>{{i.username}}</td>
+                    {% comment %} <td>{{i.last_name}}</td> {% endcomment %}
+                    <td>{{i.email}}</td>
+                    <td>
+                        <form method="POST" action="{% url 'block_user' i.id %}">
+                            {% csrf_token %}
+                            {% if i.is_active %}
+                              <button type="submit" onclick="return confirm('Are You Sure want to block this user ?')" class="btn btn-danger">Block</button>
+                            {% else %}
+                              <button type="submit" onclick="return confirm('Are You Sure want to unblock this user ?')" class="btn btn-primary">Unblock</button>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                
+                </tbody>
+            </table>
+         </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

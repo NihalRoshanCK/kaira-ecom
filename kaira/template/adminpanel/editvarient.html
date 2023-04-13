@@ -1,0 +1,69 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+<div class="card  m-4">
+    <div class="card-body bg-secondary">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Update Product Varients</h5>
+        <div class="container-fluid">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row ">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Varient Name</label>
+                            <input type="text" name="name" class="form-control" value="{{varient.name}}" placeholder="Varient Name">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Varient color </label>
+                        <select name="color" class="form-control bg-dark" >
+                            <option value="{{varient.color}}" >{{varient.color}}</option>
+                            {% for i in colors %}
+                                <option value="{{i}}">{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-sm-6">
+                        <label>Product</label>
+                        <select name="product" class="form-control bg-dark" >
+                            <option value="" >{{varient.Product}}</option>
+                            {% for i in product %}
+                                <option value="{{i.id}}">{{i.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group ">
+                            <label>Varient Price</label>
+                            <input type="number" name="price" value="{{varient.price}}" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Product Offer</label>
+                            <input type="text" name="offer" value="{{varient.offer}}" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group dark">
+                            <label>Varient Image</label>
+                            <input type="file" name="image" class="form-control bg-dark" multiple >
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Varient Hover Image</label>
+                            <input type="file" name="image" class="form-control bg-dark"  >
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                <input type="submit" value="Save" class="m-2 px-3 btn btn-primary">
+            </div> 
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

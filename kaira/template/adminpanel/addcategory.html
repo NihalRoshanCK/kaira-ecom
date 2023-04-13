@@ -1,0 +1,24 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+<div class="container-fluid my-3">
+<div class="card shadow w-100 bg-secondary " >
+    <div class="card-body">
+        <h4 class="p-3" style="border-bottom: 2px solid orange;">Add Category</h4>
+        <div class="container-fluid my-3">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="col-sm-12">
+                        <div class="form-group mt-3">
+                            <label>Category Name</label>
+                            <input type="text" name="name" class="form-control mt-3" style="border: 2px solid orange;" placeholder="Category Name">
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="Submit" class="m-2 px-3 btn btn-primary mt-4 ">
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}

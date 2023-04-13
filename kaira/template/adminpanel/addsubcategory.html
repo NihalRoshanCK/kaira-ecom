@@ -1,0 +1,37 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+<div class="container-fluid my-5 ">
+<div class="card shadow w-100 bg-secondary " >
+    <div class="card-body">
+        <h4 class="p-3" style="border-bottom: 2px solid orange;">Add Sub Category</h4>
+        <div class="container-fluid my-3">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-row d-flex">
+                    <div class="col-sm-6 mt-3">
+                        <label>Product Category</label>
+                                <select name="maincategory" class="form-control" required>
+                                    <option value="" >Choose Category</option>
+                                    {% for i in category %}
+                                    <option value="{{i.id}}">{{i.name}}</option>
+                                    {% endfor %}
+                                </select>
+                    </div>
+                    &nbsp &nbsp
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Sub Category Name</label>
+                            <input type="text" name="name" class="form-control mt-3" style="border: 2px solid orange;" placeholder="Sub Category Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 d-flex mt-4">
+                <input type="submit" value="Submit" class=" mx-auto px-3 btn btn-primary ">
+            </div>
+            
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}

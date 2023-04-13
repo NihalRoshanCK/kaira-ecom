@@ -1,0 +1,274 @@
+{% extends 'user/base.html' %}
+{% load my_tags %}
+{% block condent %} 
+<section class="confirmation_part mt-5">
+    <div class="container"> 
+      
+        {% comment %} <div class="col-lg-12 mt-5">
+          <div class="confirmation_tittle font-weight-bold text-center mt-5">
+            <span class="">Please confirm your order here.</span>
+          </div>
+        </div>
+        
+        </div>
+        
+        <div class="col-lg-5 mx-auto"  >
+          <div class="single_confirmation_details ">
+            <form  action="" method="POST">
+              {%csrf_token%}
+            <h4 class="text-center">shipping Address</h4>
+            <ul class="m-5 ">
+              <li >
+                <p>Name</p><span >{{addressSelected.firstname}} {{addressSelected.lastname}}</span>
+              </li>
+               
+              <li>
+                <p>Address</p><span>{{addressSelected.address_line_1}}</span>
+              </li>
+              <li>
+                <p>Phone</p><span>{{addressSelected.phone}}</span>
+              </li>
+              <li>
+                <p>Email</p><span>{{addressSelected.email}}</span>
+              </li>
+              <li>
+                <p>City</p><span>{{addressSelected.city}}</span>
+              </li>
+              <li>
+                <p>postcode</p><span>{{addressSelected.pincode}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+       {% endcomment %}
+      
+         <div class="col-lg-10  " style="margin-left:8vw;">
+          <div class="order_details_iner  ">
+            <h3>Order Details</h3>
+            <table class="table table-borderless ">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="2">Product</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                {% for item in cart_items %}
+                <tr>
+                  <th colspan="2"><span>{{item.product.name}}</span></th>
+                  <th>x{{item.quantity}}</th>
+                  <th> <span>Rs. {% calc_discount item.product.price item.product.offer %}</span></th>
+                </tr>
+                {% endfor %}
+                
+                <tr>
+                  
+                  <th colspan="3">Subtotal</th>
+                  <th> <span>Rs. {{total}}</span></th>
+                </tr>
+                <tr>
+                  <th colspan="3">Shipping</th>
+                  {% if price < 20000 %} <th> <span>Rs. 500 </span></th> {% else %} <th><span>Rs. FREE</span></th>{% endif %} 
+                </tr>
+                <tr>
+                  <th colspan="3">Grand Total</th>
+                  <th><span>Rs. {{price}}</span></th>
+                </tr>
+              
+              
+                <tr>
+                  <th scope="col" colspan="3">Coupon Discount</th>
+                  {% if couponDiscount %}
+                  <th scope="col">Rs. {{couponDiscount}}</th>
+                  {% else %}
+                  <th scope="col">Rs.0</th>
+                  {% endif %}
+                </tr>
+              </tbody>
+              <br>
+              <tfoot>
+                <tr>
+                  <th scope="col" colspan="3">Payable Amount</th>
+                  {% if couponDiscount %}
+                  <th scope="col">Rs. {{price}}</th>
+                  {% else %}
+                  <th scope="col">Rs. {{total}}</th>
+                  {% endif %}
+                </tr>
+              </tfoot>
+            </table>
+             
+             <div class="d-flex justify-content-center align-items-center">
+
+              {% comment %} <input type="hidden" class="form-control"  value="{{addressSelected.id}}" name="addressSelected" placeholder="First Name"required /> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.firstname}}" name="first_name"placeholder="First Name"required /> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" id="last"value="{{addressSelected.lastname}}" name="last_name"placeholder="Last Name" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" id="phone"value="{{addressSelected.phone}}" name="phone"placeholder="Phone Number"required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" id="email"value="{{addressSelected.email}}" name="email"placeholder="Email" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" id="add1" value="{{addressSelected.address_line_1}}" name="address_line_1" placeholder="Address 1"required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" id="add1" value="{{addressSelected.address_line_2}}" name="address_line_2" placeholder="Address 2"required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" id="city" value="{{addressSelected.city}}" name="city"placeholder="City" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" id="state" value="{{addressSelected.state}}" name="state"placeholder="State" required/> {% endcomment %}
+
+              {% comment %} <input type="hidden" class="form-control" id="zip_code" name="zip_code"value="{{addressSelected.pincode}}" placeholder="Postcode/ZIP" required/> {% endcomment %}
+              <!-- Coupon Related Fields -->
+              {% comment %} <input type="hidden" class="form-control" value="{{total}}" name="total" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{amount}}" name="amount" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{grand_total}}" name="amount" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{couponCode}}" name="couponCode" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{coupon_discount}}" name="couponDiscount" required/> {% endcomment %}
+             <!-- Cod Related Fields -->
+              {% comment %} <input type="hidden" value="COD" name="payment_method"> {% endcomment %}
+
+
+              {% comment %} <button class="btn btn-primary my-3 " value="submit" type="submit">Cash On Delivery</button> {% endcomment %}
+
+              {% comment %} &nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp; {% endcomment %}
+
+            {% comment %} </form> {% endcomment %}
+            {% comment %} <form action="" method="POST"> {% endcomment %}
+              {% comment %} {% csrf_token %} {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.id}}" name="addressSelected" placeholder="First Name"required /> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.firstname}}" name="first_name"placeholder="First Name"required /> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.lastname}}" name="last_name"placeholder="Last Name" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.phone}}" name="phone"placeholder="Phone Number"required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.email}}" name="email"placeholder="Email" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.address_line_1}}" name="address_line_1" placeholder="Address 1"required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.address_line_2}}" name="address_line_2" placeholder="Address 2"required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.city}}" name="city"placeholder="City" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{addressSelected.state}}" name="state"placeholder="State" required/> {% endcomment %}
+
+              {% comment %} <input type="hidden" class="form-control" name="zip_code" value="{{addressSelected.pincode}}" placeholder="Postcode/ZIP" required/> {% endcomment %}
+              <!-- Coupon Related Fields -->
+              {% comment %} <input type="hidden" class="form-control" value="{{total}}" name="total" required/> {% endcomment %}
+              {% comment %} {% if couponDiscount %} {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{amountToBePaid}}" name="amount" required/> {% endcomment %}
+              {% comment %} {% else %} {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{grand_total}}" name="amount" required/> {% endcomment %}
+              {% comment %} {% endif %} {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{couponCode}}" name="couponCode" required/> {% endcomment %}
+              {% comment %} <input type="hidden" class="form-control" value="{{coupon_discount}}" name="couponDiscount" required/> {% endcomment %}
+             
+              <button class="btn btn-sm rounded-pill mb-2 btn-info" id="pay-btn">Pay NOW</button>
+            {% comment %} </form> {% endcomment %}
+              
+            </div>
+          </div>
+        </div>
+      
+    </div>
+</section> 
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GFG</title>
+    <style>
+       
+      * {
+        box-sizing: border-box;
+        padding: 0px;
+        margin: 0px;
+        font-family: cursive;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background-color: #f1f5f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .card {
+        background-color: white;
+        padding: 25px;
+        border: 1px solid #bbbbbb;
+        border-radius: 5px;
+        box-shadow: 1px 1px 10px 0px rgb(0 0 0 / 25%);
+      }
+      .title {
+        text-align: center;
+        letter-spacing: 1px;
+      }
+      .muted {
+        color: #8e7f7f;
+        display: block;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .btn_container {
+        padding: 20px;
+        text-align: center;
+      }
+      .btn {
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 4px 8px;
+        background-color: #ffaaa7;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1 class="title">Buy Me a Chai ☕</h1>
+      <small class="muted">{{ callback_url }}</small>
+      <P>{{ razorpay_amount }}</P>
+      <p>{{ razorpay_order_id }}</p>
+      <p>{{ currency }}</p>
+      <p>{{ razorpay_merchant_key }}</p>
+
+      <div class="btn_container">
+        <!-- Payment Button -->
+        <button class="btn" id="pay-btn">Donate❤️</button>
+      </div>
+    </div>
+  </body> {% endcomment %}
+   
+  <!-- Razorpay's Javascript code. -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var options = {
+       
+          // Enter the Key ID generated from the Dashboard
+          key: "{{ razorpay_merchant_key }}",
+           
+          // Amount is in currency subunits.
+          // Default currency is INR. Hence,
+          // 50000 refers to 50000 paise
+          amount: "{{ razorpay_amount }}",
+          currency: "{{ currency }}",
+           
+          // Your/store name.
+          name: "Razorpay",
+           
+          // Pass the `id` obtained in the response of Step 1
+          order_id: "{{ razorpay_order_id }}",
+          callback_url: "{{ callback_url }}",
+          
+          
+    
+          
+        };
+         // initialise razorpay with the options.
+    var rzp1 = new Razorpay(options);
+     
+    // add event listener to the payment button.
+    document.getElementById("pay-btn").onclick = function (e) {
+      rzp1.open();
+      e.preventDefault();
+    };
+    
+  </script>
+{% comment %} </html> {% endcomment %}
+{% endblock condent %} 

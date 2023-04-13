@@ -1,0 +1,154 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block link %}<link rel="stylesheet" href="{% static '/css/login/register.css' %}">{% endblock  %}
+{% block condent %}
+  {% comment %} <a href="https://front.codes/" class="logo" target="_blank">
+		<img src="https://assets.codepen.io/1462889/fcy.png" alt="">
+	</a>
+
+	<div class="section">
+		<div class="container">
+			<div class="row full-height justify-content-center">
+				<div class="col-12 text-center align-self-center py-5">
+					<div class="section pb-5 pt-5 pt-sm-2 text-center">
+						<h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+			          	<input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+			          	<label for="reg-log"></label>
+						<div class="card-3d-wrap mx-auto">
+							<div class="card-3d-wrapper">
+								<div class="card-front">
+									<div class="center-wrap">
+										<div class="section text-center">
+											<h4 class="mb-4 pb-3">Log In</h4>
+											<form action="">
+											<div class="form-group">
+												<input type="email" name="logemail" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off">
+												<i class="input-icon uil uil-at"></i>
+											</div>	
+											<div class="form-group mt-2">
+												<input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+												<i class="input-icon uil uil-lock-alt"></i>
+											</div>
+											<a href="#" class="btn mt-4">submit</a>
+                            				<p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p>
+				      					</div>
+									</form>
+			      					</div>
+			      				</div>
+								<div class="card-back">
+									<div class="center-wrap">
+										<div class="section text-center">
+											<h4 class="mb-4 pb-3">Sign Up</h4>
+											<form method="post" enctype="multipart/form-data">
+												{% csrf_token %}
+											<div class="form-group">
+												{{ form.username }}
+												<i class="input-icon uil uil-user"></i>
+											</div>	
+											<div class="form-group mt-2">
+					
+												{{ form.email }}
+												<i class="input-icon uil uil-at"></i>
+											</div>	
+											<div class="form-group mt-2">
+												<label for="{{ form.password1.id_for_label }}">Password:</label>
+												{{ form.password1 }}
+												<i class="input-icon uil uil-lock-alt"></i>
+											</div>
+											<div class="form-group mt-2">
+												<label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+												{{ form.password2 }}
+												<i class="input-icon uil uil-lock-alt"></i>
+											</div>
+											<div class="form-group mt-2">
+												<label for="{{ form.profile_picture.id_for_label }}">Profile Picture:</label>                       
+												{{ form.photo }}
+												<i class="input-icon uil uil-lock-alt"></i>
+											</div>
+											 <a href="#" class="btn mt-4">submit</a>  
+											<button type="submit" class="btn mt-4">Register</button>
+				      					</div>
+									</form>
+			      					</div>
+			      				</div>
+			      			</div>
+			      		</div>
+			      	</div>
+		      	</div>
+	      	</div>
+	    </div>
+	</div>  {% endcomment %}
+	 {% comment %} <h2>Register</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+      <label for="{{ form.username.id_for_label }}">Username:</label>
+      {{ form.username }}
+    </div>
+    <div>
+      <label for="{{ form.email.id_for_label }}">Email:</label>
+      {{ form.email }}
+    </div>
+    <div>
+      <label for="{{ form.password1.id_for_label }}">Password:</label>
+      {{ form.password1 }}
+    </div>
+    <div>
+      <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+      {{ form.password2 }}
+    </div>
+    <div>
+      <label for="{{ form.profile_picture.id_for_label }}">Profile Picture:</label>
+      {{ form.profile_picture }}
+    </div>
+    <button type="submit">Register</button>
+   </form> {% endcomment %}
+   {% comment %} <h2>Register</h2>
+<form method="post" enctype="multipart/form-data" action="{% url 'register' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Register</button>
+</form>  {% endcomment %}
+<div class="section">
+	<div class="container">
+		<div class="row full-height justify-content-center">
+			<div class="col-12 text-center align-self-center py-5">
+				<div class="section pb-5 pt-5 pt-sm-2 text-center">
+					{% comment %} <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6> {% endcomment %}
+					  {% comment %} <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+					  <label for="reg-log"></label> {% endcomment %}
+					<div class="card-3d-wrap mx-auto">
+						<div class="card-3d-wrapper">
+							<div class="card-front">
+								<div class="center-wrap">
+									{% block formlogin %}
+									<div class="section text-center">
+										<h4 class="mb-4 pb-3">Log In</h4>
+										<form action="" method="POST">
+											{% csrf_token %}
+										<div class="form-group">
+											<input type="text" name="username" class="form-style" placeholder="Username" id="logemail" autocomplete="off">
+											<i class="input-icon uil uil-at"></i>
+										</div>	
+										<div class="form-group mt-4">
+											<input type="password" name="password" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+											<i class="input-icon uil uil-lock-alt"></i>
+										</div>
+										
+										<button type="submit" class="btn mt-4">Login</button>
+										<p class="mb-0 mt-4 text-center"><a href="{% url 'forgotpass' %}" class="link">Forgot your password?</a></p>
+										<p class="mb-0 mt-4 text-center"><a href="{% url 'register' %}" class="link text-primary">Don't have an account</a></p>
+									  </div>
+								</form>
+								{% endblock  %}
+								  </div>
+							  </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	  </div>
+  </div>
+  
+{% endblock  %}

@@ -1,0 +1,63 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+<div class="container-fluid my-4 ">
+    <div class="card shadow w-100 bg-secondary"  >
+    <div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Add Product</h5>
+        <div class="container-fluid">
+            <div class="col-sm-12">
+            <div class="row mt-5">
+                <div class="col-sm-6">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}    
+                    <label>Product Category</label>
+                            <select name="categories" class="form-control" required>
+                                <option value="" >Choose Category</option>
+                                {% for i in category %}
+                                <option value="{{i.id}}">{{i.name}}</option>
+                                {% endfor %}
+                            </select>
+                </div>
+                <div class="col-sm-6">
+                    <label>Sub Category</label>
+                    <select name="sub_category" class="form-control" required>
+                    <option value=""  >Choose Sub Category</option>
+                    {% for i in sub_category %}
+                    <option  value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Product Name</label>
+                            <input type="text" name="name" class="form-control" style="border: 2px solid orange;" placeholder="Product Name" required>
+                         </div>
+                </div>
+                <div class="col-sm-6">
+                    <label>Brand</label>
+                    <select name="brand" class="form-control" required>
+                    <option value="" >Choose Bran|get_digit</option>
+                    {% for i in brand %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                    </select>
+                </div>                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="desc" class="form-control" placeholder="write description here" required></textarea>
+                </div>
+            </div>
+            <div class="col-sm-1 mt-5 mx-auto">
+                <button type="submit" class="btn btn-danger">save</button>
+            </div>
+            
+            
+            </form>
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

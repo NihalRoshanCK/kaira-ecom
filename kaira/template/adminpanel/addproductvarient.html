@@ -1,0 +1,77 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+<div class="container-fluid my-4 ">
+    <div class="card shadow w-100 bg-secondary"  >
+    <div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Add Product Varients</h5>
+        <div class="container-fluid">
+            <div class="col-sm-12">
+            <div class="row mt-5 g-2">
+                <div class="col-sm-6 ">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}  
+                    <label>Product Name</label>
+                            <select name="product" class="form-control" required>
+                                <option value="" >Choose Product</option>
+                                {% for i in product %}
+                                <option value="{{i.id}}">{{i.name}}</option>
+                                {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Varient Name</label>
+                            <input type="text" name="name" class="form-control" style="border: 2px solid orange;" placeholder="Varient Name" required>
+                         </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Color</label><br>
+                                        <select class="form-select" id="id_city" name="color" required><br>
+                                            <option value="">Select Color</option>
+                                            {% for color in color %}
+                                                
+                                                    <option value="{{ color }}">{{ color  }}</option>
+                                                
+                                            {% endfor %}
+                                        </select>
+                    </div>
+                </div> 
+                <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Varient Price</label>
+                    <input type="text" name="price" class="form-control" placeholder="Varient Price" required>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Varient Offer</label>
+                    <input type="text" name="offer" class="form-control" placeholder="Varient Price" required>
+                </div>
+            </div>          
+             <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <input type="file" name="image" class="form-control" multiple required>
+                </div>
+            </div> 
+             <div class="col-sm-6 ">
+                <div class="form-group">
+                    <label>Product Hover Image</label>
+                    <input type="file" name="hover_image" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="col-sm-1 mt-5 mx-auto">
+                <button type="submit" class="btn btn-danger">save</button>
+            </div>
+            
+            
+            </form>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}

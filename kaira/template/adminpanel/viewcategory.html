@@ -1,0 +1,38 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+<div class="container-fluid my-3 bg-secondary ">
+<div class="card shadow w-100  my-3 bg-secondary  "  >
+    <div class="card-body">
+        <div style="border-bottom: 2px solid orange;" >
+            <div><a href="{% url 'add_Category' %}" class="btn float-end mx-2 rounded-pill" style="border: 2px solid ;" >Add &nbsp<i class="fa fa-plus-circle" aria-hidden="true"></i></a></div>
+                <h5 class="p-2" >All Category</h5>  
+            </div>
+        <div class="container-fluid">
+
+            <table class="table table-bordered table-sm" id="example">
+                <thead>
+                <tr>
+                    <th>S. No.</th>
+                    <th>Category Name</th>
+                    <th>Creation Date</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in category %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.name}}</td>
+                    <td>{{i.created}}</td>
+                    <td>
+                        <a href="{% url 'editcategory' i.id %}" class="btn-success btn">Edit</a>
+                        <a href="{% url 'delete_category' i.id %}" class="btn-danger btn" onclick="return confirm('Are You Sure?')">Delete</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'user/login.html' %}
+{% block formlogin %}
+	<div class="section text-center">
+    <h4 class="mb-4 pb-3">verify otp</h4>
+	<form action="" method="POST">
+		{% csrf_token %}
+		<div class="form-group">
+			<input type="text" name="otp" class="form-style" placeholder="Your otp" id="logemail" autocomplete="off">
+			<i class="input-icon uil uil-at"></i>
+		</div>
+		<a class="mt-5" href="{% url 'resend_otp' user.id %}">Resend otp</a>	
+		<div>					
+		<button type="submit" class="btn mt-4">Verify OTP</button>
+	</div>
+		</div>
+		</form>
+{% endblock formlogin %}

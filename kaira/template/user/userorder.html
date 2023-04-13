@@ -1,0 +1,146 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block link %}
+{% comment %} <link rel="stylesheet" href="{% static 'css/userprofile.css' %}"> {% endcomment %}
+<link rel="stylesheet" href="{% static 'css/login/user.css' %}">
+{% endblock  %}
+{% block condent %}
+<!-- End Banner Area -->
+<div class="container mt-5">
+    <div class="row ">
+        <div class="col-lg-4 pb-5 mt-5 mx-auto">
+            <!-- Account Sidebar-->
+            <div class="author-card pb-3">
+                <div class="author-card-cover" style="background-image: url( https://imgs.search.brave.com/tJcQvzE5eI0R6bv-9EZo8f5R3O44vnIcFGTRWlyi2fc/rs:fit:1090:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5o/SnE2QzZ1cGlXb1Yt/SUxNcWRJb2pnSGFE/TyZwaWQ9QXBp);"></div>
+                <div class="author-card-profile">
+                    <div class="author-card-avatar">
+                        {% if user.profile.image %}
+                        <img  src="{{ user.profile.image.url }}"alt="{{ user.username }} profile picture">
+                        {% else %}
+                        <img src="http://tcap.pbworks.com/f/1435170280/myAvatar.png" alt="{{ user.username }} profile picture">
+                        {% endif %}
+                    </div>
+                    <div class="author-card-details">
+                        <h5 class="author-card-name text-lg">{{user.username}}</h5><span class="author-card-position">{{user.date_joined.date}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wizard">
+                <nav class="list-group list-group-flush">
+                    <a class="list-group-item" href="{% url 'user_update' %}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">Profile Settings</div>
+                            </div>
+                        </div>
+                    </a><a class="list-group-item" href="{% url 'changepassword' %}"><i class="fe-icon-user text-muted"></i>Change Password </a><a class="list-group-item" href="{% url 'address_book' %}"><i class="fe-icon-map-pin text-muted"></i>Addresses</a>
+                    <a class="list-group-item" href="{% url 'wishlist' %}" target="__blank">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-heart mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">My Wishlist</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="list-group-item" href="" target="__blank">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-tag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">My Tickets</div>
+                            </div>
+                        </div>
+                    </a>
+
+
+                    <a class="list-group-item" href="{% url 'myorders' %}" target="__blank">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-tag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">My Orders</div>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    
+                    <a class="list-group-item mfp-bg" href="{% url 'logout' %}" target="__blank">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-tag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">logout</div>
+                            </div>
+                        </div>
+                    </a>
+                </nav>
+            </div>
+        </div>
+        <div class="col-md-7 my-5">
+            <div class="osahan-account-page-right shadow-sm bg-white p-4 h-100">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane  fade  active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                        <h4 class="font-weight-bold mt-0 mb-4">Past Orders</h4>
+                        {% for order in orders %}
+                        <div class="bg-white card mb-4 order-list shadow-sm">
+                            <div class="gold-members p-4">
+                                <a href="#">
+                                </a>
+                                <div class="media">
+                                    {% comment %} <a href="#">
+                                        <img class="mr-4" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="Generic placeholder image">
+                                    </a> {% endcomment %}
+                                    <div class="media-body">
+                                        <a href="#">
+                                            <span class="float-right text-info">Delivered on Mon, Nov 12, 7:18 PM <i class="icofont-check-circled text-success"></i></span>
+                                        </a>
+                                        {% comment %} <h6 class="mb-2">
+                                            <a href="#"></a>
+                                            <a href="#" class="text-black">Gus's World Famous Fried Chicken</a>
+                                        </h6> {% endcomment %}
+                                        <p class="text-gray mb-1"><i class="icofont-location-arrow"></i> 730 S Mendenhall Rd, Memphis, TN 38117, USA
+                                        </p>
+                                        <p class="text-gray mb-3"><i class="icofont-list"></i> ORDER {{ order.order_number }}<i class="icofont-clock-time ml-2"></i> {{order.created_at}}</p>
+                                        <p class="text-dark"> Order Method {{order.payment.payment_method}} 
+                                        </p>
+                                        <hr>
+                                        <div class="float-right ">
+                                        <form action="{% url 'cancelOrder' %}"  method='POST' style="width: 10rem">
+                                            {% csrf_token %}
+                                            <a href="{% url 'vieworder' order.id %}" class="btn btn-primary text-uppercase mt-2" >order info</a>
+                                            {% if order.status == 'Cancelled' %}
+                                            <div class="btn" style="font-size: 15px" >
+                                                Status: <span style="color: red ">{{ order.status }}</span>
+                                                </div>
+                                            {% elif order.status == 'Delivered' %}
+                                                <div class="btn" style="font-size: 15px" >
+                                                Status: <span style="color: green ">{{ order.status }}</span>
+                                                </div>
+                                            {% else %}
+                                                <div class="btn " style="font-size: 15px" >
+                                                Status: {{ order.status }}
+                                                </div>
+                                            {% endif %}<input type="hidden" name="id" value="{{ order.id }}">
+                                            {% if order.status == 'Cancelled' and order.payment.payment_method == 'Paid by Razorpay' %}
+                                            <div> <button  class="btn " >Refunded</button></div>
+                                            {% elif order.status == 'Cancelled' and order.payment.payment_method == 'COD' %}
+                                            <div> <button  class="btn" ></button></div>
+                                            {% elif order.status == 'Delivered' %}
+                                            <div> <button  class="btn" ></button></div>
+                                            {% else %}
+                                            <div> <button  class="btn" type="submit" style="font-size: small;  border: 1px solid red;" onclick="return confirm('Are You Sure ?')">Cancel</button></div>
+                                            {% endif %}
+                                            </form>
+
+                                            {% comment %} <a class="btn btn-sm btn-outline-primary" href="#"><i class="icofont-headphone-alt"></i> HELP</a> {% endcomment %}
+                                            {% comment %} <a class="btn btn-sm btn-primary" href="#"><i class="icofont-refresh"></i> REORDER</a> {% endcomment %}
+                                        </div>
+                                        <p class="mb-0 text-black text-primary pt-2"><span class="text-black font-weight-bold"> Total Paid:</span> ₹ {{ order.order_total }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock  %}

@@ -1,0 +1,46 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+<div class="container-fluid my-3">
+<div class="card shadow w-100 bg-secondary " >
+    <div class="card-body">
+        <h4 class="p-3" style="border-bottom: 2px solid orange;">Add Coupon</h4>
+        <div class="container-fluid my-3">
+            <form  method="post">
+                {% csrf_token %}
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4 my-3">
+                            <label class="mb-2"  for="account-fn">Coupon Code</label>
+                            {{ coupon_form.code }}
+                        </div>
+                        <div class="col-sm-4 my-3">
+                            <label class="mb-2"  for="account-fn">Coupon Discount</label>
+                            {{ coupon_form.discount }}
+                        </div>
+                        <div class="col-sm-4 my-3">
+                            <label class="mb-2"  for="account-fn">Minimum Purchase</label>
+                            {{ coupon_form.min_value }}
+                        </div>
+                        <div class="col-sm-4 my-3">
+                            <label class="mb-2"  for="account-fn">Coupon Valid From</label>
+                            {{ coupon_form.valid_from }}
+                        </div>
+                        <div class="col-sm-4 my-3">
+                            <label class="mb-2"  for="account-fn">Coupon Valid Till</label>
+                            {{ coupon_form.valid_at }}
+                        </div>
+                        <div class="col-sm-4 my-3 ">
+                            <label class="mb-2 "  for="account-fn">Coupon Active</label>
+                            {{ coupon_form.active }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-11 my-4 d-flex justify-content-center">
+                            <button type="submit" class=" btn btn-primary "style=" margin-left:300 ;">Add Coupon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}

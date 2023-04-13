@@ -1,0 +1,40 @@
+from django.urls import path
+from .views import *
+
+
+urlpatterns = [
+   path('',adminlogin, name='admin_login'),
+   path('admindashboard/', admindashboard, name="admindashboard"),
+   path('adminlogout/',adminlogout, name='admin_logout'),
+   path('addcategory/',add_Category, name='add_Category'),
+   path('add_Subcategory/',add_Subcategory, name='add_Subcategory'),
+   path('viewcategory/',view_Category, name='view_Category'),
+   path('view_Subcategory/',view_Subcategory, name='view_Subcategory'),
+   path('addproduct/',add_Product, name='add_Product'),
+   path('viewproduct/',view_Product, name='view_Product'),
+   path('view_Brand/',view_Brand, name='view_Brand'),
+   path('add_Brand/',add_Brand, name='add_Brand'),
+   path('add_varients/',add_varients, name='add_varients'),
+   path('view_varient/',view_varient, name='view_varient'),
+   path('deletecategory/<int:pid>/',deletecategory,name='deletecategory'),
+   path('editcategory/<int:pid>/',editcategory,name='editcategory'),
+   path('edit_Subcategory/<int:pid>/',edit_Subcategory,name='edit_Subcategory'),
+   path('edit_brand/<int:pid>/',edit_brand,name='edit_brand'),
+   path('edit_product/<int:pid>/',edit_product,name='edit_product'),
+   path('edit_varient/<int:pid>/',edit_varient,name='edit_varient'),
+   path('delete_category/<int:pid>/',delete_category,name="delete_category"),
+   path('delete_subcategory/<int:pid>/',delete_subcategory,name='delete_subcategory'),
+   path('delete_brand/<int:pid>/',delete_brand,name='delete_brand'),
+   path('delete_product/<int:pid>/',delete_product,name='delete_product'),
+   path('delete_varient/<int:pid>/',delete_varient,name='delete_varient'),
+   path('view_coupon/',view_coupon,name='view_coupon'),
+   path('add_coupons/',add_coupons,name='add_coupons'),
+   path('edit_coupon/<int:pid>/',edit_coupon,name='edit_coupon'),
+   path('delete_coupon/<int:pid>/',delete_coupon,name='delete_coupon'),
+   path('manage_user',manage_user,name='manage_user'),
+   path('block_user/<int:id>/',block_user,name='block_user'),
+   path('manage_order',manage_order,name='manage_order'),
+   path('update_order/<int:id>/',update_order,name='update_order'),
+   path('admincancelOrder/<int:id>/',admincancelOrder, name='admincancelOrder'),
+   
+]

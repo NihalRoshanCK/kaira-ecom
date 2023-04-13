@@ -1,0 +1,179 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block link %}
+{% comment %} <link rel="stylesheet" href="{% static 'css/userprofile.css' %}"> {% endcomment %}
+<link rel="stylesheet" href="{% static 'css/login/user.css' %}">
+{% endblock  %}
+{% block condent %}
+<div class="container mt-5">
+    <div class="row ">
+        <div class="col-lg-4 mt-5 ">
+            <!-- Account Sidebar-->
+            <div class="author-card pb-3">
+                <div class="author-card-cover" style="background-image: url( https://imgs.search.brave.com/tJcQvzE5eI0R6bv-9EZo8f5R3O44vnIcFGTRWlyi2fc/rs:fit:1090:225:1/g:ce/aHR0cHM6Ly90c2U0/Lm1tLmJpbmcubmV0/L3RoP2lkPU9JUC5o/SnE2QzZ1cGlXb1Yt/SUxNcWRJb2pnSGFE/TyZwaWQ9QXBp);"></div>
+                <div class="author-card-profile">
+                    <div class="author-card-avatar">
+                        {% if user.profile.image %}
+                        <img  src="{{ user.profile.image.url }}"alt="{{ user.username }} profile picture">
+                        {% else %}
+                        <img src="http://tcap.pbworks.com/f/1435170280/myAvatar.png" alt="{{ user.username }} profile picture">
+                        {% endif %}
+                    </div>
+                    <div class="author-card-details">
+                        <h5 class="author-card-name text-lg">{{user.username}}</h5><span class="author-card-position">{{user.date_joined.date}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wizard">
+                <nav class="list-group list-group-flush">
+                    <a class="list-group-item" href="{% url 'user_update' %}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-shopping-bag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">Profile Settings</div>
+                            </div>
+                        </div>
+                    </a><a class="list-group-item" href="{% url 'changepassword' %}"><i class="fe-icon-user text-muted"></i>Change Password </a><a class="list-group-item" href="{% url 'address_book' %}"><i class="fe-icon-map-pin text-muted"></i>Addresses</a>
+                    <a class="list-group-item" href="{% url 'wishlist' %}" target="__blank">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-heart mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">My Wishlist</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="list-group-item" href="" target="__blank">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-tag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">My Tickets</div>
+                            </div>
+                        </div>
+                    </a>
+
+
+                    <a class="list-group-item" href="{% url 'myorders' %}" target="__blank">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-tag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">My Orders</div>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    
+                    <a class="list-group-item mfp-bg" href="{% url 'logout' %}" target="__blank">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div><i class="fe-icon-tag mr-1 text-muted"></i>
+                                <div class="d-inline-block font-weight-medium text-uppercase">logout</div>
+                            </div>
+                        </div>
+                    </a>
+                </nav>
+            </div>
+        </div>
+<div class="col-sm-7"> 
+    <div class="container">
+      <!-- Title -->
+      <div class="d-flex justify-content-between align-items-center py-3">
+        <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order {{order.order_number}}</h2>
+      </div>
+    
+      <!-- Main content -->
+      <div class="row">
+        <div class="col-lg-12">
+          <!-- Details -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="mb-3 d-flex justify-content-between">
+                <div>
+                  <span class="me-3"> Date:     &nbsp 22-11-2021</span>
+                  {% comment %} <span class="me-3">#16123222</span> {% endcomment %}
+                  <span class="me-3">{{payment.payment_method}}</span>
+                  <span class="badge rounded-pill {% if order.status == "Order Confirmed" %}bg-primary {% elif order.status == "Shipped" %}bg-secondary{% elif order.status == "Out for delivery" %}bg-info{% elif order.status == "Delivered" %}bg-success{% elif order.status == "Cancelled" %}bg-danger {% else %}bg-warning{% endif %} ">{{order.status}}</span>
+                </div>
+                <div class="d-flex">{% if order.status != "Cancelled" %}
+                  <button class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text"><i class="bi bi-download"></i> <span class="text">Invoice</span></button>
+                  {% endif %}
+                  <div class="dropdown">
+                    <button class="btn btn-link p-0 text-muted" type="button" data-bs-toggle="dropdown">
+                      <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Edit</a></li>
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i> Print</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <table class="table table-borderless">
+                <tbody>
+                  <tr>
+                    {% for item in orderitems %}
+                    <td>
+                      <div class="d-flex mb-2">
+                        <div class="flex-shrink-0">
+                          <img src="{{ item.product.productimage_set.first.images.url }}" alt="" width="60" class="img-fluid">
+                        </div>
+                        <div class="flex-lg-grow-1 ml-3">
+                          <h6 class="small mb-0"><a href="#" class="text-dark">{{item.product.name}}</a></h6>
+                          <span class="small">Color: Black</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{item.quantity}}</td>
+                    <td class="text-end">₹{{item.product_price}}</td>
+                  </tr>
+                  <tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="2">Subtotal</td>
+                    <td class="text-end">₹{{order.order_total}}</td>
+                  </tr>
+                  {% if order.is_shipping == True %}
+                  <tr>
+                    <td colspan="2">Shipping</td>
+                    <td class="text-danger text-end">+500</td>
+                  </tr>
+                  {% endif %}
+                  <tr>
+                    <td colspan="2">Discount {% if order.used_coupon != "empty" %}(Code: {{order.used_coupon}}){% endif %}</td>
+                    <td class="text-success text-end">-{{order.order_discount}}</td>
+                  </tr>
+                  <tr class="fw-bold">
+                    <td colspan="2">TOTAL</td>
+                    <td class="text-end">₹{{order.paid_amount}}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+          <!-- Payment -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-6">
+                  <h3 class="h6">Payment Method</h3>
+                  <p>{{payment.payment_method}} <br>
+                    
+                  Total: {{payment.amount_paid}} {% if order.status == "Cancelled" %}<span class="badge bg-warning rounded-pill">REFUNDED</span>{% elif payment.paid == True %}<span class="badge bg-success rounded-pill">PAID</span>{% else %}<span class="badge bg-danger rounded-pill">UNPAID</span>{% endif %}</p>
+                </div>
+                <div class="col-lg-6">
+                  <h3 class="h6">Delivery address</h3>
+                  <address>
+                    <strong>{{order.address.firstname}}</strong><br>
+                {{order.address.address_line_1}}<br>
+                {{order.address.address_line_2}}<br>
+                Email:{{order.address.email}}
+                <br>
+                <p title="Phone">PHONE : {{order.address.phone}}</p>
+                  </address>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+    {% endblock %}

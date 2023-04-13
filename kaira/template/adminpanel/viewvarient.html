@@ -1,0 +1,52 @@
+{% extends 'adminpanel/base.html' %}
+{% block content %}
+<div class=" container-fluid my-3 bg-secondary ">
+    <div class="card shadow w-100  my-3 bg-secondary"  >
+        <div class="card-body">
+            <div style="border-bottom: 2px solid orange;" >
+                <div>
+                    <a href="{% url 'add_varients' %}" class="btn float-end mx-2 rounded-pill" style="border: 2px solid ;" >Add &nbsp<i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+                </div>
+                    <h5 class="p-2" >All Varient    </h5>  
+            </div>
+            <div class="container-fluid">
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-sm " id="example">
+                        <thead>
+                            <tr>
+                                <th>S. No.</th>
+                                <th>Product Name</th>
+                                <th>Varient Name</th>
+                                <th>Color</th>
+                                <th>Price</th>
+                                <th>Offer</th>
+                                <th>Image</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in varient %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.Product.name}}</td>
+                                <td>{{i.name}}</td>
+                                <td>{{i.color}}</td>
+                                <td>{{i.price}}</td>
+                                <td>{{i.offer}}%</td>
+                                <td><img src="{{i.productimage_set.first.images.url}}" alt="" style="max-height:10vh"></td>
+                                {% comment %} <td>{{i.created}}</td> {% endcomment %}
+                                <td>
+                                    <a href="{% url 'edit_varient' i.id %}" class="btn-success btn">Edit</a>
+                                    <a href="{% url 'delete_varient' i.id %}" class="btn-danger btn"
+                                    onclick="return confirm('Are You Sure?')">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
