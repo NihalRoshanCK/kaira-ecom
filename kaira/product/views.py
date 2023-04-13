@@ -174,13 +174,12 @@ def add_to_wishlist(request,product_id ,w):
 def remove_from_wishlist(request,product_id,w):
     wishItem=wishlist.objects.get(product_id=product_id,user_id=request.user.id)
     wishItem.delete()
-    match w:
-        case 0:
-            return redirect(viewwishlist)
-        case 1:
-            return redirect('singleproduct','product_id')
-        case 2:
-            return redirect('shop')
+    if w == 0:
+        return redirect(viewwishlist)
+    elif w == 1:
+        return redirect('singleproduct','product_id')
+    else:
+        return redirect('shop')
     
 def checkout(request):
     if request.user.is_authenticated:
