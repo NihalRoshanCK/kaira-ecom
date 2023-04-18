@@ -83,7 +83,9 @@
                                 <div class="card shadow my-2 col-7">
                     
                                     <div class="card-body"> 
+                                        {% if address.is_default == false %}
                                         <input type="checkbox" name="selected_addresses" value="{{ address.id }}">
+                                        {% endif %}
                                         <div class="container"> 
                                             <p>{{ address.firstname}} {{ address.lastname}}</p>
                                             <p>{{ address.phone}}</p>
@@ -104,7 +106,7 @@
                             </div>
                             {% endfor %}
                             
-                            <a href="{% url 'add_address' 5 %}" class="btn btn-success mt-5">Add Address</a>
+                            <a href="{% url 'add_address' 0 %}" class="btn btn-success mt-5">Add Address</a>
                             <input type="submit" class="btn btn-danger mt-5" value="Delete">
                             
             
