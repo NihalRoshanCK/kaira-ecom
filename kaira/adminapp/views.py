@@ -177,7 +177,7 @@ def add_varients(request):
         for image in images :
             ProductImage.objects.create( varient = varient , images = image,hover_images = hoverimage)
         messages.success(request, "Product Added")
-        Size.objects.create(varient=varient,size=size,stock=stock)
+        # Size.objects.create(varient=varient,size=size,stock=stock)
     return render (request,'adminpanel/addproductvarient.html',locals())   
         
 
