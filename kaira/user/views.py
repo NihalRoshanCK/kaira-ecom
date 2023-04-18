@@ -24,18 +24,20 @@ def sort(request,pid,w):
     brand=Brand.objects.all()
     another=ProductVarient.objects.all()
     colors = ProductVarient.objects.values_list('color', flat=True).distinct()
-    if w == 0:
-        S_category = Category.objects.get(id=pid)
-        c_prod = Product.objects.filter(category_id=S_category).first()
-        product = ProductVarient.objects.filter(Product_id=c_prod)
-    elif w == 1:
-        S_subcategory = SubCategory.objects.get(id=pid)
-        c_prod = Product.objects.filter(subcategory_id=S_subcategory).first()
-        product = ProductVarient.objects.filter(Product_id= c_prod)
-    else:
-        b_brand = Brand.objects.get(id=pid)
-        c_prod = Product.objects.filter(brand_id=b_brand).first()
-        product = ProductVarient.objects.filter(Product=c_prod)
+    
+    match w:
+        case 0:
+            S_category = Category.objects.get(id=pid)
+            c_prod = Product.objects.filter(category_id=S_category).first()
+            product = ProductVarient.objects.filter(Product_id=c_prod)
+        case 1:
+            S_subcategory = SubCategory.objects.get(id=pid)
+            c_prod = Product.objects.filter(subcategory_id=S_subcategory).first()
+            product = ProductVarient.objects.filter(Product_id= c_prod)
+        case 2:
+            b_brand = Brand.objects.get(id=pid)
+            c_prod = Product.objects.filter(brand_id=b_brand).first()
+            product = ProductVarient.objects.filter(Product=c_prod)
     if request.method == 'POST':
         color = request.POST['color'] 
         product = ProductVarient.objects.filter(color=color)
@@ -413,12 +415,12 @@ def address_book(request):
         selected_addresses = request.POST.getlist('selected_addresses')
         Address.objects.filter(id__in=selected_addresses).delete()
         return redirect(address_book)
-    return render(request, 'user/adressbook.html', {'addresses': addresses})
+    return render(request, 'user/adressbook.html', {'addresses': addresses})    
 
 
 
 
-def add_address(request):
+def add_address(request,w):
     state = ['Kerala', 'AndraPradesh', 'Karnataka', 'Tamilnadu']
     city = ['Kannur','Kozhikkode','Ernakulam','Thiruvananthapuram','Banglore','Hubli','Hydrabad','Coimbator','Madurai']
     if request.method == 'POST':
@@ -434,6 +436,9 @@ def add_address(request):
             state=request.POST['state'],
             pincode=request.POST['pincode']
         )
+        addresses = Address.objects.filter(user=request.user)
+        if not addresses.exists():
+            address.is_default=True
         address.save()
 
         # set default address
@@ -442,8 +447,10 @@ def add_address(request):
             Address.objects.filter(user=request.user).exclude(id=address.id).update(is_default=False)
             address.is_default = True
             address.save()
-
-        return redirect('address_book')
+        if w==0:
+            return redirect('address_book')
+        else:
+            return redirect('checkout')
     else:
         context = {
             'state': state,

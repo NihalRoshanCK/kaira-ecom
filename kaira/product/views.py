@@ -54,36 +54,73 @@ def addcart(request, product_id):
             # return redirect('singleproduct', product_id)
             return redirect('singleproduct', product_id)
 
-
-
 def viewcart(request):
     if request.user.is_authenticated:
         cart_items = CartItem.objects.filter(user=request.user, is_active=True)
-        total=0
-        for item in cart_items:
-            total=item.product.price*item.quantity 
-        context = {'cart_items': cart_items,'total':total}
     else:
         cart = request.session.get('cart', {})
         cart_items = []
         for key, value in cart.items():
             product_id, size = key.split('-')
             product = ProductVarient.objects.get(id=product_id)
-            productstock = Size.objects.filter(varient=product_id, size=size).first()
-            stock = productstock.stock
             cart_item = {
                 'product': product,
                 'size': size,
-                'quantity': value['quantity'],
-                'stock': stock,
+                'quantity': value['quantity']
             }
             cart_items.append(cart_item)
-        context = {'cart_items': cart_items}
+
+    total = 0
+    discount = 0
+    for item in cart_items:
+        if request.user.is_authenticated:
+            product_price=item.product.price
+            offer=item.product.offer
+            quantity=item.quantity
+        else:
+            product_price = item['product'].price
+            offer = item['product'].offer
+            quantity = item['quantity']
+        price_after_discount = product_price - (product_price * offer/100)
+        total += price_after_discount * quantity
+        discount += product_price * quantity - (price_after_discount * quantity)
+        discount=round(discount,2)
+
+    context = {'cart_items': cart_items, 'total': total, 'discount': discount}
     return render(request, 'product/cart.html', context)
+
+
+# def viewcart(request):
+#     if request.user.is_authenticated:
+#         cart_items = CartItem.objects.filter(user=request.user, is_active=True)
+#         total=0
+#         discount=0
+#         for item in cart_items:
+#             total+=(item.product.price - (item.product.price * item.product.offer/100))* item.quantity
+#             discount+=(item.product.price-((item.product.price - (item.product.price * item.product.offer/100))* item.quantity))
+#             discount=round(discount, 2)
+#         context = {'cart_items': cart_items,'total':total,'discount':discount}
+#     else:
+#         cart = request.session.get('cart', {})
+#         cart_items = []
+#         for key, value in cart.items():
+#             product_id, size = key.split('-')
+#             product = ProductVarient.objects.get(id=product_id)
+#             productstock = Size.objects.filter(varient=product_id, size=size).first()
+#             stock = productstock.stock
+#             cart_item = {
+#                 'product': product,
+#                 'size': size,
+#                 'quantity': value['quantity'],
+#                 'stock': stock,
+#             }
+#             cart_items.append(cart_item)
+#         context = {'cart_items': cart_items}
+#     return render(request, 'product/cart.html', context)
 
 def remove_cart(request, product_id ,size):
     if request.user.is_authenticated:
-        cart_item = CartItem.objects.get(product_id=product_id, size=size, user=request.user, is_active=True)  
+        cart_item = CartItem.objects.get(product_id=product_id, size    =size, user=request.user, is_active=True)  
         cart_item.delete()
         messages.success(request, f"{cart_item.product.name} removed from cart!")
         return redirect(viewcart)
@@ -155,29 +192,32 @@ def add_to_wishlist(request,product_id ,w):
         product = ProductVarient.objects.get(id=product_id)
         if wishlist.objects.filter(product=product,user_id=request.user.id).exists():
             messages.info(request, "Product already exist in wishlist")
-                        
+            return redirect('shop')
+            
         else:
             wishlist.objects.create(product=product,user_id=request.user.id)
             messages.success(request,"Product added to wishlist")
-        
-        if w == 1:
-            return redirect('singleproduct',product_id)
-        else:
             return redirect('shop')
-    else:
         
+    else:
+        match w:
+            case 1:
+                return redirect('singleproduct','product_id')
+            case _:
+                return redirect('shop')
         messages.warning(request, "Please log in to add items to wishlist.")
         return render (request,'user/login.html')
 
 def remove_from_wishlist(request,product_id,w):
-    wishItem=wishlist.objects.get(product_id=product_id,user=request.user)
+    wishItem=wishlist.objects.get(product_id=product_id,user_id=request.user.id)
     wishItem.delete()
-    if w == 0:
-        return redirect(viewwishlist)
-    elif w == 1:
-        return redirect('singleproduct', product_id)
-    else:
-        return redirect('shop')
+    match w:
+        case 0:
+            return redirect(viewwishlist)
+        case 1:
+            return redirect('singleproduct','product_id')
+        case 2:
+            return redirect('shop')
     
 def checkout(request):
     if request.user.is_authenticated:
@@ -201,6 +241,8 @@ def confirmation(request):
     cart_items=CartItem.objects.filter(user=request.user)
     newAddress_id = request.POST.get('selected_addresses')
     if request.method == "POST":
+        if newAddress_id is None:
+         return redirect('checkout')
         total = request.POST["total"]
         try:
             price=float(request.POST["amountToBePaid"])
@@ -247,7 +289,7 @@ def confirmation(request):
             a=0
             neworder=createorder(newAddress_id,current_user,mode,discount_Display,price,couponCode,total,couponDiscount,a)
             
-            return redirect ('invoice',neworder) 
+            return redirect ('invoice',neworder)
 
 def invoice(request,order):
     conform_order = Order.objects.get(user=request.user,order_number=order)

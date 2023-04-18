@@ -41,24 +41,20 @@
             <form class="cart-form clearfix" action="{% url 'addcart' prod.id %}" method="GET">
                 <!-- Select Box -->
                 <div class="select-box d-flex mt-50 mb-30">
-                    {% comment %} <select name="select" id="productSize" class="mr-5"> {% endcomment %}
-                        {% for s in size %}
-                        {% comment %} <option name="size" value="{{s.size}}">Size:{{s.size}}</option> {% endcomment %}
-                        <input type="radio" name="size" id="" value="{{s.size}}" />
-                        <label for=""> {{s.size}}</label>
-                        {% endfor %}
-                        {% comment %} <option value="value">Size: X</option>
-                        <option value="value">Size: M</option>
-                        <option value="value">Size: S</option> {% endcomment %}
-                    {% comment %} </select> {% endcomment %}
-                    <select name="select" id="productColor">
-                        {% for c in color %}
-                        <option name="color" value="{{c.color}}">Color: {{c.color}}</option>
-                        {% endfor %}
-                        {% comment %} <option value="value">Color: White</option>
-                        <option value="value">Color: Red</option>
-                        <option value="value">Color: Purple</option> {% endcomment %}
+                    {% for s in size %}
+                    <select name="size" id="productSize" class="mr-5 my-1">
+                        <option value="{{s.size}}">Size:{{s.size}}</option>
                     </select>
+                    {% endfor %}
+                    <div class="" >
+                        {% for c in color %}
+                        {% if prod.id != c.id  %}
+                        <label>
+                            <a href="{% url 'singleproduct'  c.id %}" class="btn"><img style="width : 40px" src="{{c.productimage_set.first.images.url}}" ></a>
+                        </label>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
                 <!-- Cart & Favourite Box -->
                 <div class="cart-fav-box d-flex align-items-center">
