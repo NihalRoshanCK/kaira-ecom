@@ -24,20 +24,19 @@ def sort(request,pid,w):
     brand=Brand.objects.all()
     another=ProductVarient.objects.all()
     colors = ProductVarient.objects.values_list('color', flat=True).distinct()
-    
-    match w:
-        case 0:
-            S_category = Category.objects.get(id=pid)
-            c_prod = Product.objects.filter(category_id=S_category).first()
-            product = ProductVarient.objects.filter(Product_id=c_prod)
-        case 1:
-            S_subcategory = SubCategory.objects.get(id=pid)
-            c_prod = Product.objects.filter(subcategory_id=S_subcategory).first()
-            product = ProductVarient.objects.filter(Product_id= c_prod)
-        case 2:
-            b_brand = Brand.objects.get(id=pid)
-            c_prod = Product.objects.filter(brand_id=b_brand).first()
-            product = ProductVarient.objects.filter(Product=c_prod)
+
+    if w== 0:
+        S_category = Category.objects.get(id=pid)
+        c_prod = Product.objects.filter(category_id=S_category).first()
+        product = ProductVarient.objects.filter(Product_id=c_prod)
+    elif w== 1:
+        S_subcategory = SubCategory.objects.get(id=pid)
+        c_prod = Product.objects.filter(subcategory_id=S_subcategory).first()
+        product = ProductVarient.objects.filter(Product_id= c_prod)
+    else:
+        b_brand = Brand.objects.get(id=pid)
+        c_prod = Product.objects.filter(brand_id=b_brand).first()
+        product = ProductVarient.objects.filter(Product=c_prod)
     if request.method == 'POST':
         color = request.POST['color'] 
         product = ProductVarient.objects.filter(color=color)
