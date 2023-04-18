@@ -41,11 +41,13 @@
             <form class="cart-form clearfix" action="{% url 'addcart' prod.id %}" method="GET">
                 <!-- Select Box -->
                 <div class="select-box d-flex mt-50 mb-30">
-                    {% for s in size %}
                     <select name="size" id="productSize" class="mr-5 my-1">
+                    {% for s in size %}
+
                         <option value="{{s.size}}">Size:{{s.size}}</option>
-                    </select>
                     {% endfor %}
+
+                    </select>
                     <div class="" >
                         {% for c in color %}
                         {% if prod.id != c.id  %}
