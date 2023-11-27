@@ -11,7 +11,7 @@ from product.views import *
 from django.contrib.auth import authenticate,login
 import os
 import kaira.settings
-
+  
 # Create your views here.
 
 def index(request):
