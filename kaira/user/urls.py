@@ -17,6 +17,7 @@ urlpatterns = [
     path('logout/',logout, name='logout'),
     path('user/',user, name='user'),
     path('singleproduct/<slug:slug>/', singleproduct, name='singleproduct'),
+    path('singleproductmodeal/<slug:slug>/', singleproductmodeal, name='singleproductmodeal'),
     path('changepassword/',changepassword, name='changepassword'),
     path('add_address/<int:w>',add_address, name='add_address'),
     path('address_book/',address_book, name='address_book'),

@@ -10,12 +10,23 @@ from .forms import *
 from product.views import *
 from django.contrib.auth import authenticate,login
 import os
+import random
 import kaira.settings
+from django.http import JsonResponse
+from django.core.serializers import serialize
   
 # Create your views here.
 
 def index(request):
-    return render(request,'user/index.html')
+    products_with_variants = Product.objects.prefetch_related('productvarient_set').order_by('-created')[:12]
+
+    for product in products_with_variants:
+        for product_varient in product.productvarient_set.all():
+            product_varient.calculated_price = product_varient.price * product_varient.offer / 100
+
+    return render(request, 'user/index.html', {'products_with_variants': products_with_variants})
+
+
 def sort(request,pid,w):
     sizes=Size.objects.all()
     category = Category.objects.all()
@@ -91,54 +102,6 @@ def shop(request):
         wishlist_products = wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
         context.update({'wishlist_product_ids': wishlist_products})
     return render(request, 'user/shop.html', context)
-    
-    
-    # price= product.price - (product.offer/100)
-    # if pid == 0:
-        
-    #     product = Product
-    #     product = Product.objects.all()
-    #     category = Category.objects.all()
-    #     subcategory = SubCategory.objects.all()
-    #     if request.user.is_authenticated:
-    #         wishlist_products = wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
-    #         context={
-    #         'wishlist_product_ids': wishlist_products,
-    #         'category':category,
-    #         'subcategory':subcategory,
-    #         'product':product
-    #         }
-    #     else:
-    #         context={
-    #         'category':category,
-    #         'subcategory':subcategory,
-    #         'product':product
-    # }
-    # else:
-    #     sp_category = Category.objects.get(id=pid)
-    #     category = Category.objects.all()
-    #     subcategory = SubCategory.objects.all()
-    #     product = Product.objects.filter(category=sp_category)
-    #     if request.user.is_authenticated:
-    #         wishlist_products = wishlist.objects.filter(user=request.user).values_list('product_id', flat=True)
-    #         context={
-    #         'wishlist_product_ids': wishlist_products,
-    #         'category':category,
-    #         'subcategory':subcategory,
-    #         'product':product
-    #         }
-            
-    #     else:
-    #         context={
-    #         'category':category,
-    #         'subcategory':subcategory,
-    #         'product':product
-    #         }
-            
-    
-    # # context={
-    # #     'Products':Product.objects.all(),
-    # # }
     
 
 def register(request):
@@ -383,6 +346,27 @@ def singleproduct(request, slug):
     print(whish)    
     print(slug)
     return render(request, 'user/singleproduct.html', locals())
+
+def singleproductmodeal(request, slug):
+    whish = True
+    prod = ProductVarient.objects.get(id=slug)
+    product = Product.objects.get(id=prod.Product.id)
+    offer= round(prod.price -( prod.price *(prod.offer/100 )))
+    images = ProductImage.objects.filter(varient_id=slug)
+    size = Size.objects.filter(varient_id=slug)
+    color= ProductVarient.objects.filter(Product=product)
+    if request.user.is_authenticated:
+        Wishlist= wishlist.objects.filter(user = request.user, product_id = prod.id).first()
+        if Wishlist is  None:
+            whish = False 
+    size_list = list(size.values())
+    print(whish)    
+    print(slug)
+    data = {
+        'size_data': size_list  ,
+    }
+    print(size_list)
+    return JsonResponse(data,safe=False)
 
 
 def search(request):
