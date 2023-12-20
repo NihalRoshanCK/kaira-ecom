@@ -108,7 +108,11 @@ Kaira.com
                             {% endif %}
                             <!-- Favourite -->
                             <div class="product-favourite">
-                                <a href="#" class="favme fa fa-heart"></a>
+                                {% if product_varient.whish %}
+                                <a href="{% url 'add_to_wishlist' product_varient.id 3  %}" class="active favme fa fa-heart"></a>
+                                {% else %}
+                                <a href="{% url 'add_to_wishlist' product_varient.id 3  %}" class="favme fa fa-heart"></a>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- Product Description -->

@@ -13,6 +13,7 @@ import razorpay
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import kaira.settings
+# from user.views import user_login
 from django.http import HttpResponseBadRequest
 # Create your views here.
 
@@ -160,7 +161,7 @@ def additem(request,product_id,product_size):
 
     else:
         messages.warning(request, "Please log in to add items to cart.")
-        return redirect(loginpage)
+        return redirect('login')
     
     
 def removecartitem(request,product_id,product_size):
@@ -192,19 +193,31 @@ def add_to_wishlist(request,product_id ,w):
         product = ProductVarient.objects.get(id=product_id)
         if wishlist.objects.filter(product=product,user_id=request.user.id).exists():
             messages.info(request, "Product already exist in wishlist")
-            return redirect('shop')
+            if w== 1:
+                return redirect('singleproduct','product_id')
+            elif w== 2:
+                return redirect('shop')
+            else:
+                return redirect('/')
             
         else:
             wishlist.objects.create(product=product,user_id=request.user.id)
             messages.success(request,"Product added to wishlist")
-            return redirect('shop')
+            if w== 1:
+                return redirect('singleproduct','product_id')
+            elif w== 2:
+                return redirect('shop')
+            else:
+                return redirect('/')
         
     else:
     
         if w== 1:
             return redirect('singleproduct','product_id')
-        else:
+        elif w== 2:
             return redirect('shop')
+        else:
+            return redirect('')
         messages.warning(request, "Please log in to add items to wishlist.")
         return render (request,'user/login.html')
 

@@ -18,12 +18,16 @@ from django.core.serializers import serialize
 # Create your views here.
 
 def index(request):
+    whish = False
     products_with_variants = Product.objects.prefetch_related('productvarient_set').order_by('-created')[:12]
-
+    
     for product in products_with_variants:
         for product_varient in product.productvarient_set.all():
             product_varient.calculated_price = product_varient.price * product_varient.offer / 100
-
+            if request.user.is_authenticated:
+                Wishlist= wishlist.objects.filter(user = request.user, product_id =product_varient.id).first()
+                if Wishlist:
+                    product_varient.whish=True
     return render(request, 'user/index.html', {'products_with_variants': products_with_variants})
 
 
@@ -332,7 +336,7 @@ def user_update(request):
     return render(request,'user/user_update.html',{'user_form': user_form,'profile_form': profile_form})
 
 def singleproduct(request, slug):
-    whish = True
+    whish = False
     prod = ProductVarient.objects.get(id=slug)
     product = Product.objects.get(id=prod.Product.id)
     offer= round(prod.price -( prod.price *(prod.offer/100 )))
@@ -341,8 +345,8 @@ def singleproduct(request, slug):
     color= ProductVarient.objects.filter(Product=product)
     if request.user.is_authenticated:
         Wishlist= wishlist.objects.filter(user = request.user, product_id = prod.id).first()
-        if Wishlist is  None:
-            whish = False 
+        if Wishlist:
+            whish = True 
     print(whish)    
     print(slug)
     return render(request, 'user/singleproduct.html', locals())

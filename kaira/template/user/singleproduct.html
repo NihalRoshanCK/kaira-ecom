@@ -65,7 +65,7 @@
                     <!-- Favourite -->
                     <div class="product-favourite ml-4">
                         {% if whish == True %}
-                        <a href="{% url 'remove_from_wishlist' prod.id 1 %}" class="favme fa fa-heart active"></a>
+                        <a href="{% url 'remove_from_wishlist' prod.id 1 %}" class="favme fa fa-heart "></a>
                         {% else %}
                         <a href="{% url 'add_to_wishlist' prod.id 1 %}" class="favme fa fa-heart"></a>
                         {% endif %}
